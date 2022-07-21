@@ -1,0 +1,27 @@
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+*.out
+
+# build
+build
+bin
+lib
+
+# vscode
+.vscode
+
+# clion
+.idea
+cmake-build-debug
+
+# docs
+docs/html
+docs/Doxyfile-copy
