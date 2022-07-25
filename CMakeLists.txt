@@ -26,17 +26,19 @@ set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -ggdb -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O2 -Wall -Werror")
 
 set(libshmlite_inc
+    include/libshmlite/common_utils.h
     include/libshmlite/shm_handle.h
     include/libshmlite/shm_lock.h
     include/libshmlite/shm_pool.hpp
     )
 
 set(libshmlite_src
+    src/libshmlite/common_utils.cc
     src/libshmlite/shm_handle.cc
     src/libshmlite/shm_lock.cc
-    include/libshmlite/shm_pool.hpp
     )
 
+# 指定需要依赖的外部库
 set(ext_libs pthread rt)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)

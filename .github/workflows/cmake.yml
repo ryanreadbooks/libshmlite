@@ -27,6 +27,6 @@ jobs:
       run: make && sudo make install
 
     - name: Test
-      working-directory: ${{github.workspace}}/bin
-      run: ./test_shmhandle
+      working-directory: ${{github.workspace}}/test
+      run: chmod +x ./run_all_test.bash && ./run_all_test.bash
       

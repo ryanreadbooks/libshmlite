@@ -1,17 +1,19 @@
 #pragma once
 
+#include <dirent.h> // for macro NAME_MAX
 #include <fcntl.h>
+#include <iostream>
+#include <string>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <string>
-#include <iostream>
 
-#include "libshmlite/common_utils.h"
+#include "common_utils.h"
 
 namespace shmlite {
 
-constexpr const char *kShmNamePrefix = "/libshmlite-";  /**< 共享内存名字的前缀，必须以/开头 */
+constexpr const char *kShmNamePrefix =
+    "/lsmlh-"; /**< 共享内存名字的前缀，必须以/开头。libshmlitehandle 缩写为 lsmlh */
 
 /**
  * @brief 对POSIX API下的共享内存操作的封装。
@@ -22,12 +24,21 @@ class ShmHandle : public NamedClass {
 public:
   /**
    * @brief 检查共享内存是否存在
-   * 
+   *
    * @param shm_name 共享内存名字
    * @return true   存在
    * @return false  不存在
    */
   static bool CheckExists(const std::string &shm_name);
+
+  /**
+   * @brief 删除系统中的共享内存
+   *
+   * @param shm_name 共享内存的名称
+   * @return true 删除成功
+   * @return false 删除失败
+   */
+  static bool UnLink(const std::string &shm_name);
 
   LIBSHMLITE_NO_COPYABLE(ShmHandle)
 
@@ -53,6 +64,17 @@ public:
    * @param auto_unlink 析构的时候是否同时 shm_unlink 掉这块共享内存
    */
   ShmHandle(std::string name, size_t size, OpenFlags flags,
+            bool auto_unlink = false);
+
+  /**
+   * @brief 创建一个 ShmHandle 对象，如果该共享内存不存在，则指定共享内存的初始值。
+   *
+   * @param name        对象的名称。
+   * @param value       共享内存的初始化的值，指向一块内存
+   * @param size        初始值的大小，单位（字节）。
+   * @param auto_unlink   析构的时候是否同时 shm_unlink 掉这块共享内存
+   */
+  ShmHandle(std::string name, void *value, size_t size,
             bool auto_unlink = false);
 
   /**
@@ -100,15 +122,6 @@ public:
    * @return void* 共享内存地址
    */
   inline void *Ptr() const { return ptr_; }
-
-private:
-  /**
-   * @brief 拼接共享内存文件的名字
-   * @param name 名字
-   *
-   * @return 拼接后的名字
-   */
-  static std::string ConcatShmRealname(const std::string& name);
 
 private:
   int fd_ = -1; /**< ShmHandle 底层的文件描述符，由操作系统提供。 */
