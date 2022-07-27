@@ -30,6 +30,7 @@ set(libshmlite_inc
     include/libshmlite/shm_handle.h
     include/libshmlite/shm_lock.h
     include/libshmlite/shm_pool.hpp
+    include/libshmlite/container/shm_array.hpp
     )
 
 set(libshmlite_src

@@ -39,6 +39,15 @@
   ClassName(const ClassName &) = delete;                                       \
   ClassName &operator=(const ClassName &) = delete;
 
+#define SIMPLE_DEBUG(msg) \
+  std::cout << "libshmlite[DEBUG]: " << msg << '\n'
+
+#define SIMPLE_WARN(msg) \
+  std::cout << "libshmlite[WARN]: " << msg << '\n'
+
+#define SIMPLE_ERROR(msg) \
+  std::cerr << "libshmlite[ERROR]: " << msg << '\n'
+
 namespace shmlite {
 
 /**

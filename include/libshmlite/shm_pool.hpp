@@ -1,20 +1,19 @@
 #pragma once
 
-#include "common_utils.h"
-#include "shm_handle.h"
 #include <memory>
 #include <unordered_map>
+#include "common_utils.h"
+#include "shm_handle.h"
 
 namespace shmlite {
-using ShmHandleMap =
-    std::unordered_map<std::string, std::shared_ptr<ShmHandle>>;
+using ShmHandleMap = std::unordered_map<std::string, std::shared_ptr<ShmHandle>>;
 
 /**
  * @brief 共享内存变量池，提供统一的访问接口
- * 
+ *
  */
 class ShmPool {
-public:
+ public:
   /**
    * @brief 从共享内存中获取基础类型变量，不指定初始值
    *
@@ -22,10 +21,10 @@ public:
    * @param name  共享内存变量名称
    * @return T*   共享内存的指针
    */
-  template <typename T> static T *Get(const std::string &name) {
+  template <typename T>
+  static T *Get(const std::string &name) {
     if (s_pool_.find(name) == s_pool_.end()) {
-      auto handle_ptr = std::make_shared<ShmHandle>(
-          name, sizeof(T), ShmHandle::CREAT_RDWR, false);
+      auto handle_ptr = std::make_shared<ShmHandle>(name, sizeof(T), ShmHandle::CREAT_RDWR, false);
       if (!handle_ptr->IsValid()) {
         return nullptr;
       }
@@ -46,7 +45,6 @@ public:
   template <typename T>
   static T *Get(const std::string &name, T default_value) {
     T *val_ptr = nullptr;
-    // TODO 需要处理key存在和key不存在两种情况
     if (s_pool_.find(name) == s_pool_.end()) { /* 先前还没有获取过这个变量 */
       /* 去共享内存拿 */
       auto handle_ptr = std::make_shared<ShmHandle>(name, &default_value, sizeof(T), false);
@@ -60,27 +58,41 @@ public:
     return static_cast<T *>(s_pool_[name]->Ptr());
   }
 
+  /**
+   * @brief 从共享内存中获取数组（一块连续的地址）。长度不可变
+   *
+   * @tparam T    数组存放的数据类型
+   * @param name  共享内存数组名称
+   * @param size  数组的大小
+   * @return T*   数组首地址
+   */
+  template <typename T>
+  static T *Array(const std::string &name, size_t size) {
+    // TODO 构造定长数组
+    return nullptr;
+  }
+
   LIBSHMLITE_NO_COPYABLE(ShmPool)
 
-private:
+ private:
   /**
    * @brief 私有构造函数，不对外提供构造此对象的方法
-   * 
+   *
    */
-  ShmPool() {}
+  ShmPool() = default;
 
-private:
+ private:
   static ShmHandleMap s_pool_; /**< 存放所有当前程序的共享内存ShmHandle对象键值对 */
 };
 
 ShmHandleMap ShmPool::s_pool_ = {};
 
-} // namespace shmlite
+}  // namespace shmlite
 
 /**
  * @brief 获取基础类型
- * 
- * 
+ *
+ *
  * @param type 类型
  * @param name 名字
  */
@@ -88,24 +100,24 @@ ShmHandleMap ShmPool::s_pool_ = {};
 
 /**
  * @brief 获取基础类型，并且设置初始值
- * 
+ *
  * @param type 类型
  * @param name 名字
  * @param default_value 初始值
- * 
+ *
  */
 #define GET_DEFAULT(type, name, default_value) shmlite::ShmPool::Get<type>(name, default_value)
 
 /**
  * @brief 获取int类型
- * 
+ *
  * @param name 名字
  */
 #define GET_INT(name) GET(int, name)
 
 /**
  * @brief 获取int类型，并且指定初始值
- * 
+ *
  * @param name 名字
  * @param default_value 初始值
  */

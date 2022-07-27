@@ -15,9 +15,7 @@ TEST(SHMLock, BaseTest) {
 TEST(SHMLock, BaseTest2) {
   shmlite::ShmLock lk2("lk2", 1, true);
   ASSERT_FALSE(shmlite::ShmLock::UnLink("lk3"));
-  {
-    shmlite::ShmLock lk3("lk3", 1, false);
-  }
+  { shmlite::ShmLock lk3("lk3", 1, false); }
   ASSERT_TRUE(shmlite::ShmLock::UnLink("lk3"));
 }
 

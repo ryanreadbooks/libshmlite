@@ -16,3 +16,6 @@ target_link_libraries(test_shmlock ${libs})
 
 add_executable(test_shmpool test_shmpool.cc)
 target_link_libraries(test_shmpool ${libs})
+
+add_executable(test_shmarray test_shmarray.cc)
+target_link_libraries(test_shmarray ${libs})

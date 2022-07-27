@@ -1,12 +1,11 @@
 #include <utility>
 #include "libshmlite/shm_lock.h"
 
-
 namespace shmlite {
 
 bool ShmLock::UnLink(const std::string &name) {
   std::string real_shmname = ConcatStringLimited(kShmLockNamePrefix, name, SHMLOCK_NAME_MAX);
-  std::cout << "real_shmname = " << real_shmname << std::endl;
+  SIMPLE_DEBUG("real_shmname = " << real_shmname);
   return sem_unlink(real_shmname.c_str()) == 0;
 }
 
@@ -18,7 +17,7 @@ ShmLock::ShmLock(std::string name, unsigned int value, bool auto_unlink)
     PRINT_ERRMSG("Can not initialize sem_t " << name_, errno);
   }
 #ifdef DEV_DEBUG
-  std::cout << "sem_t " << real_semname << " (" << sem_ptr_ << ") created.\n";
+  SIMPLE_DEBUG("sem_t " << real_semname << " (" << sem_ptr_ << ") created");
 #endif
 }
 
@@ -29,7 +28,7 @@ ShmLock::~ShmLock() {
     ShmLock::UnLink(name_);
   }
 #ifdef DEV_DEBUG
-  std::cout << "sem_t (" << sem_ptr_ << ") destructed.\n";
+  SIMPLE_DEBUG("sem_t (" << sem_ptr_ << ") destructed.");
 #endif
 }
 

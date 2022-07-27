@@ -17,7 +17,7 @@ constexpr const char *kShmLockNamePrefix =
  * 封装POSIX下的命名信号量的基础操作
  */
 class ShmLock : public NamedClass {
-public:
+ public:
   /**
    * @brief 删除指定的信号量文件
    *
@@ -36,8 +36,7 @@ public:
    * @param value 信号量的初始值
    * @param auto_unlink 析构时是否自动删除信号量文件
    */
-  explicit ShmLock(std::string name, unsigned int value = 1,
-                   bool auto_unlink = false);
+  explicit ShmLock(std::string name, unsigned int value = 1, bool auto_unlink = false);
 
   /**
    * @brief 析构函数
@@ -79,9 +78,9 @@ public:
    */
   inline sem_t *SemPtr() const { return sem_ptr_; }
 
-private:
+ private:
   sem_t *sem_ptr_ = nullptr; /**< 信号量描述符 */
   bool auto_unlink_;         /**< 析构时是否自动删除信号量文件 */
 };
 
-} // namespace shmlite
+}  // namespace shmlite
